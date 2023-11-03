@@ -47,12 +47,17 @@ export default function PostCar() {
     formData.append("model", model);
     formData.append("price", price);
     formData.append("phone", phone);
-    {
-      files.map((image) => {
-        console.log(image, "single image");
-        return formData.append("carImages", image);
-      });
-    }
+    // We can't upload or save images on vercel live server that is why commenting the code
+    /**
+     * You won't be able to upload new files to a live Vercel Project outside of build and deployment time.
+     *  But you can use an external service to store files uploaded via your site.
+     */
+    // {
+    //   files.map((image) => {
+    //     console.log(image, "single image");
+    //     return formData.append("carImages", image);
+    //   });
+    // }
     try {
       setIsLoading(true);
       const response = await axios.post(`${base_url}/car`, formData, {
