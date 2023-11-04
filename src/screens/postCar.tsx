@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import LabeledInput from "../components/LabeledInput";
-import axios, { Axios, AxiosError } from "axios";
+import axios from "axios";
 import ImageContainer from "../components/ImageContainer";
 import { toast } from "react-toastify";
 import ImageSelector from "../components/ImageSelector";
