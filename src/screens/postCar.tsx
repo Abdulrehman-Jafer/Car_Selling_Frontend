@@ -30,24 +30,21 @@ export default function PostCar() {
     const { model, price, phone } = carInfo;
 
     // Adding Rookie kind of validation should have used a library or handled in the backend
-    if (!model) {
-      return toast.error("Please specify Model");
-    }
-    if (!price) {
-      return toast.error("Please specify Price");
-    }
-    if (!phone) {
-      return toast.error("Please specify Phone");
-    }
+    if (!model) return toast.error("Please specify Model");
 
-    if (phone.length < 10) {
-      return toast.error("Phone number should be atleast 10 digits long");
-    }
+    if (!price) return toast.error("Please specify Price");
+
+    if (!phone) return toast.error("Please specify Phone");
+
+    if (model.length < 3)
+      return toast.error("Model must atleast be 3 characters long");
+
+    if (phone.length < 11 || phone.length > 11)
+      return toast.error("Phone number must be 11 digits");
 
     formData.append("model", model);
     formData.append("price", price);
     formData.append("phone", phone);
-    // We can't upload or save images on vercel live server that is why commenting the code
     /**
      * You won't be able to upload new files to a live Vercel Project outside of build and deployment time.
      *  But you can use an external service to store files uploaded via your site.
@@ -111,13 +108,14 @@ export default function PostCar() {
 
   return (
     <div className="h-screen flex items-center justify-center w-full mx-auto">
-      <div className="flex flex-col gap-4 border p-3 w-[96%]">
+      <form className="flex flex-col gap-4 border p-3 w-[96%]">
         <LabeledInput
           value={carInfo.model}
           onChange={onChangeHandler}
           type="text"
           inputName="model"
           placeholder="Enter model"
+          minLength={3}
           label="Model"
         />
         <LabeledInput
@@ -126,6 +124,7 @@ export default function PostCar() {
           type="number"
           inputName="price"
           placeholder="Enter price"
+          minLength={2}
           label="Price"
         />
         <LabeledInput
@@ -134,7 +133,9 @@ export default function PostCar() {
           type="tel"
           inputName="phone"
           placeholder="Enter phone"
+          minLength={11}
           label="Phone"
+          maxLength={11}
         />
         <div className="flex items-center gap-2">
           <h2 className="text-3xl font-bold">City:</h2>
@@ -214,13 +215,15 @@ export default function PostCar() {
             isLoading
               ? "cursor-default  bg-blue-300"
               : "cursor-pointer  bg-blue-500  hover:bg-blue-600"
-          } p-2 font-semibold text-white rounded`}
+          } p-2 font-semibold text-white rounded disabled:bg-blue-300 disabled:cursor-default`}
           onClick={handleSubmit}
-          disabled={isLoading}
+          disabled={
+            isLoading || !carInfo.city || !carInfo.model || !carInfo.phone
+          }
         >
           {isLoading ? "Adding" : "Add Car"}
         </button>
-      </div>
+      </form>
     </div>
   );
 }

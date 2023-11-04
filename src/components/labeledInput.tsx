@@ -1,10 +1,12 @@
 export default function LabeledInput({
   label,
   inputName,
-  type = "text",
+  type,
   value,
   onChange,
-  placeholder
+  placeholder,
+  minLength,
+  maxLength,
 }: {
   label: string;
   inputName: string;
@@ -12,6 +14,8 @@ export default function LabeledInput({
   type: string;
   pattern?: string;
   placeholder: string;
+  minLength: number;
+  maxLength?: number;
   onChange: (e: any) => void;
 }) {
   return (
@@ -25,6 +29,8 @@ export default function LabeledInput({
         id={inputName}
         placeholder={placeholder}
         value={value}
+        minLength={minLength}
+        maxLength={maxLength}
         className="border-2 text-2xl ms-2 w-full indent-2"
         onChange={(e) => onChange(e)}
         required

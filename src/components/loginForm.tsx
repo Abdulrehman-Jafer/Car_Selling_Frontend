@@ -90,6 +90,7 @@ export default function LoginForm() {
       </div>
       <Button
         loading={isLoading}
+        disabled={isLoading || !loginInfo.email || !loginInfo.password}
         type="primary"
         htmlType="submit"
         className="bg-blue-500 w-full text-center"
