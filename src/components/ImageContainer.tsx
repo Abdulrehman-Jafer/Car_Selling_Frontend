@@ -15,7 +15,6 @@ const ImageContainer = ({
 }: ImageContainerProps) => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [isImageVisible, setIsImageVisible] = useState(true);
-  console.log({ isDeleted });
 
   return (
     <Wrapper>
@@ -27,7 +26,9 @@ const ImageContainer = ({
             transition: "all 0.3s",
           }}
           alt="Avatar"
-          className={`image ${isDeleted ? "delete-animation" : ""}`}
+          className={`image min-w-[150px] ${
+            isDeleted ? "delete-animation" : ""
+          }`}
         />
         <div className="overlay">
           <div className="overlay-container">

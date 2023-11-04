@@ -5,10 +5,6 @@ import { base_url, token_key } from "../constants";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const onFinishFailed = (errorInfo: any) => {
-  console.log("Failed:", errorInfo);
-};
-
 type LoginFormType = {
   email: string;
   password: string;
@@ -48,8 +44,11 @@ export default function LoginForm() {
       toast.success("Login Successful");
       navigate("/");
     } catch (error) {
-      toast.error("Invalid Credentails");
       setIsLoading(false);
+      console.log(error);
+      const errorMessage =
+        (error as any).response.data.error.msg || "Something went wrong";
+      toast.error(errorMessage);
     }
   };
 
@@ -59,7 +58,6 @@ export default function LoginForm() {
       style={{ maxWidth: 600 }}
       initialValues={{ remember: true }}
       onFinish={onSubmit}
-      onFinishFailed={onFinishFailed}
       autoComplete="off"
       className="md:min-w-[600px] min-w-[300px] border p-3 flex flex-col gap-3"
     >

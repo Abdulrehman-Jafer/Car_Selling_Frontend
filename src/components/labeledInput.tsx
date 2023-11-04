@@ -10,7 +10,7 @@ export default function LabeledInput({
 }: {
   label: string;
   inputName: string;
-  value: string;
+  value: string | number;
   type: string;
   pattern?: string;
   placeholder: string;
@@ -28,7 +28,7 @@ export default function LabeledInput({
         name={inputName}
         id={inputName}
         placeholder={placeholder}
-        value={value}
+        value={value!}
         minLength={minLength}
         maxLength={maxLength}
         className="border-2 text-2xl ms-2 w-full indent-2"

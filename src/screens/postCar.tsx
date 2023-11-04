@@ -1,6 +1,6 @@
-import { useState } from "react";
-import LabeledInput from "../components/labeledInput";
-import axios from "axios";
+import React, { FormEvent, useState } from "react";
+import LabeledInput from "../components/LabeledInput";
+import axios, { Axios, AxiosError } from "axios";
 import ImageContainer from "../components/ImageContainer";
 import { toast } from "react-toastify";
 import ImageSelector from "../components/ImageSelector";
@@ -8,28 +8,34 @@ import { base_url, token_key } from "../constants";
 
 type carInfoType = {
   model: string;
-  price: string;
+  price: number | string;
   phone: string;
   city: string;
-  numberOfPics: string;
+  numberOfPics: number;
 };
 const intialState = {
   model: "",
   price: "",
   phone: "",
-  city: "",
-  numberOfPics: "1",
+  city: "Lahore",
+  numberOfPics: 1,
 };
+
+const cityList = ["Lahore", "Karachi"];
+const maxCarPicsOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
 export default function PostCar() {
   const [files, setFiles] = useState<File[]>([]);
   const [carInfo, setCarinfo] = useState<carInfoType>(intialState);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
     const formData = new FormData();
-    const { model, price, phone } = carInfo;
+    const { model, price, phone, numberOfPics } = carInfo;
 
     // Adding Rookie kind of validation should have used a library or handled in the backend
+
     if (!model) return toast.error("Please specify Model");
 
     if (!price) return toast.error("Please specify Price");
@@ -42,19 +48,22 @@ export default function PostCar() {
     if (phone.length < 11 || phone.length > 11)
       return toast.error("Phone number must be 11 digits");
 
+    if (files.length < 1) return toast.error("Please add atleast one pic");
+
     formData.append("model", model);
-    formData.append("price", price);
+    formData.append("price", `${price}`);
     formData.append("phone", phone);
+    formData.append("numberOfPics", `${numberOfPics}`);
     /**
      * You won't be able to upload new files to a live Vercel Project outside of build and deployment time.
      *  But you can use an external service to store files uploaded via your site.
      */
     // {
     //   files.map((image) => {
-    //     console.log(image, "single image");
     //     return formData.append("carImages", image);
     //   });
     // }
+
     try {
       setIsLoading(true);
       const response = await axios.post(`${base_url}/car`, formData, {
@@ -62,14 +71,16 @@ export default function PostCar() {
           authorization: localStorage.getItem(token_key),
         },
       });
-      toast.success((response.data.message as string).toLocaleUpperCase());
+      toast.success(response.data.message as string);
       setIsLoading(false);
       setCarinfo(intialState);
       setFiles([]);
     } catch (error) {
-      toast.error("Invalid data");
       setIsLoading(false);
       console.log(error);
+      const errorMessage =
+        (error as any).response.data.error.msg || "Something went wrong";
+      toast.error(errorMessage);
     }
   };
 
@@ -92,30 +103,30 @@ export default function PostCar() {
   };
 
   const handleFilesSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(carInfo.numberOfPics);
     if (e.target.files) {
-      if (e.target.files) {
-        const newFiles: File[] = Array.from(e.target.files);
-        const allFiles = [...files, ...newFiles];
-        if (allFiles.length > +carInfo.numberOfPics) {
-          toast.error("Select a correct number of Images");
-          return;
-        }
-        setFiles(allFiles);
+      const newFiles: File[] = Array.from(e.target.files);
+      const allFiles = [...files, ...newFiles];
+      if (allFiles.length > +carInfo.numberOfPics) {
+        toast.error("Select a correct number of Images");
+        return;
       }
+      setFiles(allFiles);
     }
   };
 
   return (
     <div className="h-screen flex items-center justify-center w-full mx-auto">
-      <form className="flex flex-col gap-4 border p-3 w-[96%]">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-4 border p-3 w-[96%]"
+      >
         <LabeledInput
           value={carInfo.model}
           onChange={onChangeHandler}
           type="text"
           inputName="model"
           placeholder="Enter model"
-          minLength={3}
+          minLength={0}
           label="Model"
         />
         <LabeledInput
@@ -139,40 +150,29 @@ export default function PostCar() {
         />
         <div className="flex items-center gap-2">
           <h2 className="text-3xl font-bold">City:</h2>
-          <input
-            type="radio"
-            id="lahore"
-            name="city"
-            value="Lahore"
-            checked={carInfo.city == "Lahore"}
-            className="h-[20px] w-[20px]"
-            onChange={(e) => onChangeHandler(e)}
-          />
-          <label
-            htmlFor="lahore"
-            className="text-2xl font-normal cursor-pointer"
-          >
-            Lahore
-          </label>
-          <input
-            type="radio"
-            id="karachi"
-            name="city"
-            value="Karachi"
-            checked={carInfo.city == "Karachi"}
-            className="h-[20px] w-[20px]"
-            onChange={(e) => onChangeHandler(e)}
-          />
-          <label
-            htmlFor="karachi"
-            className="text-2xl font-normal cursor-pointer"
-          >
-            Karachi
-          </label>
+          {cityList.map((c) => (
+            <React.Fragment key={c}>
+              <input
+                type="radio"
+                id={c}
+                name="city"
+                value={c}
+                checked={carInfo.city == c}
+                className="h-[20px] w-[20px]"
+                onChange={(e) => onChangeHandler(e)}
+              />
+              <label
+                htmlFor={c}
+                className="text-2xl font-normal cursor-pointer"
+              >
+                {c}
+              </label>
+            </React.Fragment>
+          ))}
         </div>
         <div className="flex">
-          <label htmlFor="cars" className="text-3xl font-bold">
-            Copies:
+          <label htmlFor="cars" className="text-3xl font-bold ">
+            MaxPics:
           </label>
 
           <select
@@ -182,23 +182,15 @@ export default function PostCar() {
             value={carInfo.numberOfPics}
             onChange={(e) => onChangeHandler(e)}
           >
-            <option className="border-2" value="1">
-              1
-            </option>
-            <option className="border-2" value="2">
-              2
-            </option>
-            <option className="border-2" value="3">
-              3
-            </option>
-            <option className="border-2" value="4">
-              4
-            </option>
+            {maxCarPicsOptions.map((o) => (
+              <option key={o} className="border-2" value={o}>
+                {o}
+              </option>
+            ))}
           </select>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap justify-center">
           {files.map((image, fileIndex) => {
-            console.log(image);
             return (
               <ImageContainer
                 key={fileIndex}
@@ -211,15 +203,13 @@ export default function PostCar() {
           <ImageSelector onChange={handleFilesSelection} />
         </div>
         <button
+          type="submit"
           className={`${
             isLoading
               ? "cursor-default  bg-blue-300"
               : "cursor-pointer  bg-blue-500  hover:bg-blue-600"
           } p-2 font-semibold text-white rounded disabled:bg-blue-300 disabled:cursor-default`}
-          onClick={handleSubmit}
-          disabled={
-            isLoading || !carInfo.city || !carInfo.model || !carInfo.phone
-          }
+          disabled={isLoading}
         >
           {isLoading ? "Adding" : "Add Car"}
         </button>
