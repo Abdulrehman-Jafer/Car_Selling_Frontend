@@ -1,5 +1,5 @@
 import React, { FormEvent, useState } from "react";
-import LabeledInput from "../components/LabeledInput";
+import LabeledInput from "../components/labeledInput";
 import axios from "axios";
 import ImageContainer from "../components/ImageContainer";
 import { toast } from "react-toastify";
