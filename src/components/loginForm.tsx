@@ -62,53 +62,53 @@ export default function LoginForm() {
   return (
     <Form
       name="basic"
-      labelCol={{ span: 8 }}
-      wrapperCol={{ span: 16 }}
       style={{ maxWidth: 600 }}
       initialValues={{ remember: true }}
       onFinish={onSubmit}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
-      className="min-w-[600px] border p-3"
+      className="md:min-w-[600px] min-w-[300px] border p-3 flex flex-col gap-3"
     >
-      <h1 className="text-3xl font-bold text-center mb-10">Sign In</h1>
-      <Form.Item<FieldType>
-        label="Email"
+      <h1 className="text-3xl font-bold text-center mb-4">Sign In</h1>
+      <div>
+
+      <label
+        htmlFor="email"
         className="font-semibold"
-        rules={[{ required: true, message: "Please input your username!" }]}
       >
+        Email
+      </label>
         <Input
           type="email"
+          placeholder="Enter email"
           name="email"
           value={loginInfo.email}
           onChange={onChangeHandler}
-        />
-      </Form.Item>
-
-      <Form.Item<FieldType>
-        label="Password"
-        name="password"
+          />
+          </div>
+<div>
+      <label
+        htmlFor="password"
         className="font-semibold"
-        rules={[{ required: true, message: "Please input your password!" }]}
       >
+        Password
+      </label>
         <Input.Password
           type="password"
+          placeholder="Enter password"
           name="password"
           value={loginInfo.password}
           onChange={onChangeHandler}
         />
-      </Form.Item>
-
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+          </div>
         <Button
           loading={isLoading}
           type="primary"
           htmlType="submit"
-          className="bg-blue-500 w-full"
+          className="bg-blue-500 w-full text-center"
         >
           Submit
         </Button>
-      </Form.Item>
     </Form>
   );
 }

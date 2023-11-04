@@ -117,6 +117,7 @@ export default function PostCar() {
           onChange={onChangeHandler}
           type="text"
           inputName="model"
+          placeholder="Enter model"
           label="Model"
         />
         <LabeledInput
@@ -124,6 +125,7 @@ export default function PostCar() {
           onChange={onChangeHandler}
           type="number"
           inputName="price"
+          placeholder="Enter price"
           label="Price"
         />
         <LabeledInput
@@ -131,6 +133,7 @@ export default function PostCar() {
           onChange={onChangeHandler}
           type="tel"
           inputName="phone"
+          placeholder="Enter phone"
           label="Phone"
         />
         <div className="flex items-center gap-2">
@@ -192,7 +195,6 @@ export default function PostCar() {
             </option>
           </select>
         </div>
-
         <div className="flex gap-2">
           {files.map((image, fileIndex) => {
             console.log(image);
@@ -210,8 +212,8 @@ export default function PostCar() {
         <button
           className={`${
             isLoading
-              ? "cursor-default  bg-slate-300"
-              : "cursor-pointer  bg-slate-500"
+              ? "cursor-default  bg-blue-300"
+              : "cursor-pointer  bg-blue-500  hover:bg-blue-600"
           } p-2 font-semibold text-white rounded`}
           onClick={handleSubmit}
           disabled={isLoading}

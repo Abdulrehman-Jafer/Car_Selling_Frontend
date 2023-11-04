@@ -4,12 +4,14 @@ export default function LabeledInput({
   type = "text",
   value,
   onChange,
+  placeholder
 }: {
   label: string;
   inputName: string;
   value: string;
   type: string;
   pattern?: string;
+  placeholder: string;
   onChange: (e: any) => void;
 }) {
   return (
@@ -21,8 +23,9 @@ export default function LabeledInput({
         type={type}
         name={inputName}
         id={inputName}
+        placeholder={placeholder}
         value={value}
-        className="border-2 text-2xl ms-2 w-full"
+        className="border-2 text-2xl ms-2 w-full indent-2"
         onChange={(e) => onChange(e)}
         required
       />
