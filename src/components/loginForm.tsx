@@ -9,12 +9,6 @@ const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
 };
 
-type FieldType = {
-  username?: string;
-  password?: string;
-  remember?: string;
-};
-
 type LoginFormType = {
   email: string;
   password: string;
@@ -71,28 +65,21 @@ export default function LoginForm() {
     >
       <h1 className="text-3xl font-bold text-center mb-4">Sign In</h1>
       <div>
-
-      <label
-        htmlFor="email"
-        className="font-semibold"
-      >
-        Email
-      </label>
+        <label htmlFor="email" className="font-semibold">
+          Email
+        </label>
         <Input
           type="email"
           placeholder="Enter email"
           name="email"
           value={loginInfo.email}
           onChange={onChangeHandler}
-          />
-          </div>
-<div>
-      <label
-        htmlFor="password"
-        className="font-semibold"
-      >
-        Password
-      </label>
+        />
+      </div>
+      <div>
+        <label htmlFor="password" className="font-semibold">
+          Password
+        </label>
         <Input.Password
           type="password"
           placeholder="Enter password"
@@ -100,15 +87,15 @@ export default function LoginForm() {
           value={loginInfo.password}
           onChange={onChangeHandler}
         />
-          </div>
-        <Button
-          loading={isLoading}
-          type="primary"
-          htmlType="submit"
-          className="bg-blue-500 w-full text-center"
-        >
-          Submit
-        </Button>
+      </div>
+      <Button
+        loading={isLoading}
+        type="primary"
+        htmlType="submit"
+        className="bg-blue-500 w-full text-center"
+      >
+        Submit
+      </Button>
     </Form>
   );
 }
